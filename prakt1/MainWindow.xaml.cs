@@ -59,5 +59,13 @@ namespace prakt1
             }
         }
 
+        private void RestockProduct_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProductsGrid.SelectedItem is Product product)
+            {
+                product.Restock(5);
+                ProductsGrid.Items.Refresh();
+            }
+        }
     }
 }
