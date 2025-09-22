@@ -39,3 +39,4 @@ namespace prakt1
             Quantity += amount;
         }
     }
+}
