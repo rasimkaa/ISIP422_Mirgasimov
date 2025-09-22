@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,14 +16,23 @@ using System.Windows.Shapes;
 
 namespace prakt1
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        public ObservableCollection<Product> Products { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
+            Products = new ObservableCollection<Product>
+            {
+                new Product("Хлеб", 30, 20, ProductCategory.Food),
+                new Product("Телефон", 20000, 5, ProductCategory.Electronics),
+                new Product("Футболка", 1200, 10, ProductCategory.Clothes),
+                new Product("Сыр", 400, 8, ProductCategory.Food),
+                new Product("Наушники", 3000, 3, ProductCategory.Electronics)
+            };
+            ProductsGrid.ItemsSource = Products;
         }
+
     }
 }
