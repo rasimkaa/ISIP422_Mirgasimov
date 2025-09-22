@@ -33,6 +33,15 @@ namespace prakt1
             };
             ProductsGrid.ItemsSource = Products;
         }
+        private void AddProduct_Click(object sender, RoutedEventArgs e)
+        {
+            Products.Add(new Product("Новый товар", 100, 1, ProductCategory.Clothes));
+        }
 
+        private void DeleteProduct_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProductsGrid.SelectedItem is Product product)
+                Products.Remove(product);
+        }
     }
 }
