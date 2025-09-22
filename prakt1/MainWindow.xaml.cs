@@ -43,5 +43,21 @@ namespace prakt1
             if (ProductsGrid.SelectedItem is Product product)
                 Products.Remove(product);
         }
+        private void SellProduct_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProductsGrid.SelectedItem is Product product)
+            {
+                try
+                {
+                    product.Sell(1);
+                    ProductsGrid.Items.Refresh();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
     }
 }
