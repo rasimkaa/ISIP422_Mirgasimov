@@ -20,6 +20,11 @@ namespace prakt1
     {
         public ObservableCollection<Product> Products { get; set; }
 
+        // История продаж (для отката)
+        private Stack<Sale> SalesHistory = new Stack<Sale>();
+        // Все продажи для отчёта
+        private List<Sale> AllSales = new List<Sale>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -33,6 +38,7 @@ namespace prakt1
             };
             ProductsGrid.ItemsSource = Products;
         }
+
         private void AddProduct_Click(object sender, RoutedEventArgs e)
         {
             Products.Add(new Product("Новый товар", 100, 1, ProductCategory.Clothes));
@@ -43,6 +49,7 @@ namespace prakt1
             if (ProductsGrid.SelectedItem is Product product)
                 Products.Remove(product);
         }
+
         private void SellProduct_Click(object sender, RoutedEventArgs e)
         {
             if (ProductsGrid.SelectedItem is Product product)
@@ -50,6 +57,10 @@ namespace prakt1
                 try
                 {
                     product.Sell(1);
+                    var sale = new Sale(product, 1);
+                    SalesHistory.Push(sale);   // в стек (для отмены)
+                    AllSales.Add(sale);        // в общий список (для отчёта)
+
                     ProductsGrid.Items.Refresh();
                 }
                 catch (Exception ex)
@@ -66,6 +77,50 @@ namespace prakt1
                 product.Restock(5);
                 ProductsGrid.Items.Refresh();
             }
+        }
+
+        // Отмена последней продажи
+        private void UndoLastSale_Click(object sender, RoutedEventArgs e)
+        {
+            if (SalesHistory.Any())
+            {
+                var lastSale = SalesHistory.Pop();
+                lastSale.Product.Restock(lastSale.Quantity);
+                ProductsGrid.Items.Refresh();
+                MessageBox.Show($"Отмена продажи: {lastSale.Product.Name}");
+            }
+            else
+            {
+                MessageBox.Show("Нет продаж для отмены.");
+            }
+        }
+
+        // Отчёт о продажах
+        private void SalesReport_Click(object sender, RoutedEventArgs e)
+        {
+            if (!AllSales.Any())
+            {
+                MessageBox.Show("Продаж пока не было.");
+                return;
+            }
+
+            var grouped = AllSales
+                .GroupBy(s => s.Product.Name)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Quantity = g.Sum(s => s.Quantity),
+                    Total = g.Sum(s => s.Total)
+                });
+
+            string report = "Отчёт о продажах:\n\n";
+            foreach (var item in grouped)
+            {
+                report += $"{item.Name} — {item.Quantity} шт. — {item.Total} руб.\n";
+            }
+            report += $"\nОбщая сумма: {grouped.Sum(x => x.Total)} руб.";
+
+            MessageBox.Show(report);
         }
     }
 }
