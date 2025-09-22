@@ -14,6 +14,8 @@
             <Button Content="Удалить" Width="100" Margin="5" Click="DeleteProduct_Click"/>
             <Button Content="Продать" Width="100" Margin="5" Click="SellProduct_Click"/>
             <Button Content="Заказать" Width="100" Margin="5" Click="RestockProduct_Click"/>
+            <Button Content="Отмена продажи" Width="120" Margin="5" Click="UndoLastSale_Click"/>
+            <Button Content="Отчёт о продажах" Width="140" Margin="5" Click="SalesReport_Click"/>
         </StackPanel>
 
         <!-- Таблица товаров -->
